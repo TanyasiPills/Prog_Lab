@@ -11,8 +11,8 @@ namespace Labor01
             //Feladat4();
             //Feladat5();
             //Feladat6();
-            //Feladat7_8();
-            Feladat9_10();
+            Feladat7_8();
+            //Feladat9_10();
             //Feladat11();
             //Feladat12();
             //Feladat13();
