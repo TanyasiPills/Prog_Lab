@@ -16,7 +16,8 @@
             //Feladat8();
             //Feladat9();
             //Feladat10();
-            Feladat11_12();
+            //Feladat11_12();
+            Feladat13();
         }
 
         static void Feladat1()
@@ -357,10 +358,54 @@
                 }
             }
         }
-    
+
         static void Feladat13()
         {
+            Console.BufferWidth = 200;
+            Console.WindowWidth = 200;
+            Console.WriteLine("A kezdő érték 100");
+            Console.WriteLine("A szórás(a) opciók: 0, 20, 40");
+            Console.WriteLine("A szorzó(r) opciók: -1.1, 0, 1.1");
+            Console.Write("Nyomj bármilyen gombot az inditáshoz");
+            Console.ReadKey();
+            Console.WriteLine();
 
+            float[] mults = { -1.1f, 0, 1.1f };
+            int[] spreads = {0, 20, 40 };
+            float[] curResults = Enumerable.Repeat(100f, mults.Length*spreads.Length).ToArray();
+
+            for (int mult = 0; mult < mults.Length; mult++)
+            {
+                for (int spread = 0; spread < spreads.Length; spread++)
+                {
+                    Console.Write($"r:{mults[mult]};a:{spreads[spread]} \t ");
+                }
+            }
+
+            Console.WriteLine();
+            for (int i = 1; i <= 10; i++)
+            {
+                for (int mult = 0; mult < mults.Length; mult++)
+                {
+                    for (int spread = 0; spread < spreads.Length; spread++)
+                    {
+                        float cur = curResults[mult * spreads.Length + spread];
+                        cur = cur * mults[mult] + rnd.Next(-spreads[spread], spreads[spread] + 1);
+
+                        float display = MathF.Round(cur, 1);
+                        int tabCount = 2 - (display.ToString().Length/8);
+                        string tabs = "";
+                        for (int t = 0; t < tabCount; t++) tabs += "\t";
+
+                        Console.Write($"{display}{tabs} ");
+
+                        curResults[mult * spreads.Length + spread] = cur;
+                    }
+                }
+
+                Console.WriteLine();
+                Thread.Sleep(1000);
+            }
         }
     }
 }
