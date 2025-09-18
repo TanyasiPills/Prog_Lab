@@ -1,6 +1,4 @@
-﻿using System.Net.Http.Headers;
-
-namespace Labor01
+﻿namespace Labor01
 {
     internal class Program
     {
