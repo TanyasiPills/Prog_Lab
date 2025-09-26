@@ -478,7 +478,7 @@ namespace Week3
             if (y > 1 && grid[x, y-1]) result |= Progress(x, y-1, grid);
             if (y < grid.GetLength(1) - 1 && grid[x, y+1]) result |= Progress(x, y+1, grid);
 
-            if (x == grid.GetLength(0) - 1 && y == grid.GetLength(1) - 1) result = true;
+            if (x == grid.GetLength(0) - 1 && y == grid.GetLength(1) - 1 && grid[x,y]) result = true;
             return result;
         }
     }
