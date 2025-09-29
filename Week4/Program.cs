@@ -243,10 +243,10 @@ namespace Week4
     
         static void Render(char[,] buffer, (int,int) cursorPos)
         {
+            string tmp = "";
             for (int y = 0; y < buffer.GetLength(1); y++)
             {
-                string tmp = "|";
-
+                tmp += "|";
                 for (int x = 0; x < buffer.GetLength(0); x++)
                 {
                     if (x == cursorPos.Item1 && y == cursorPos.Item2)
@@ -264,20 +264,28 @@ namespace Week4
                     else tmp += buffer[x, y];
                 }
 
-                tmp += "|";
-
-                Console.WriteLine(tmp);
+                tmp += "|\n";
             }
-
+            Console.WriteLine(tmp);
             Console.WriteLine($"Cursor Pos: {cursorPos.Item1};{cursorPos.Item2}");
+        }
+
+        static void Movement(ref (int, int) cursorPos, ConsoleKey key, (int,int) bound)
+        {
+            if(key == ConsoleKey.LeftArrow) cursorPos.Item1 = Math.Clamp(--cursorPos.Item1,0,bound.Item1);
+            else if(key == ConsoleKey.RightArrow) cursorPos.Item1 = Math.Clamp(++cursorPos.Item1,0,bound.Item1);
+            else if(key == ConsoleKey.UpArrow) cursorPos.Item2 = Math.Clamp(--cursorPos.Item2,0,bound.Item2);
+            else if(key == ConsoleKey.DownArrow) cursorPos.Item2 = Math.Clamp(++cursorPos.Item2,0,bound.Item2);
+            //return cursorPos;
         }
 
         static void Feladat10()
         {
-            Console.WindowHeight = (Console.BufferHeight / 200) - 10;
+            Console.WindowHeight = (Console.BufferHeight / 200);
             ConsoleKey[] movement = { ConsoleKey.LeftArrow, ConsoleKey.UpArrow, ConsoleKey.DownArrow, ConsoleKey.RightArrow };
 
-            char[,] buffer = new char[Console.BufferWidth-10, (Console.BufferHeight / 200)-10];
+            (int, int) bound = (Console.BufferWidth - 10, (Console.BufferHeight / 200) - 10);
+            char[,] buffer = new char[bound.Item1, bound.Item2];
             for (int y = 0; y < buffer.GetLength(1); y++) for (int x = 0; x < buffer.GetLength(0); x++) buffer[x, y] = ' ';
 
             (int, int) cursorPos = (0,0);
@@ -288,9 +296,14 @@ namespace Week4
                 ConsoleKeyInfo key = Console.ReadKey();
                 Console.Clear();
 
-                if (movement.Contains(key.Key)) {
-
+                if (movement.Contains(key.Key))
+                {
+                    Movement(ref cursorPos, key.Key, bound);
+                    //Console.WriteLine($"{cursorPos.Item1};{cursorPos.Item2}");
                 }
+                else if (key.Key == ConsoleKey.Enter) cursorPos = (0, cursorPos.Item2+1);
+                else if (key.Key == ConsoleKey.Backspace) buffer[--cursorPos.Item1, cursorPos.Item2] = ' ';
+                else buffer[cursorPos.Item1++, cursorPos.Item2] = key.KeyChar;
 
                 Render(buffer, cursorPos);
             }
