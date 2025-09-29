@@ -1,4 +1,6 @@
-﻿namespace Week4
+﻿using System;
+
+namespace Week4
 {
     internal class Program
     {
@@ -13,6 +15,9 @@
             //Feladat5();
             //Feladat6();
             //Feladat7();
+            //Feladat8();
+            //Feladat9();
+            Feladat10();
         }
 
         static void Feladat1()
@@ -48,7 +53,7 @@
             input = input.ToLower().Trim().Replace(" ", "");
             string reverse = new string(input.Reverse().ToArray());
 
-            if(input == reverse) Console.WriteLine("\nA megadott szöveg palindrom");
+            if (input == reverse) Console.WriteLine("\nA megadott szöveg palindrom");
             else Console.WriteLine("\nA megadott szöveg nem palindrom");
         }
 
@@ -121,7 +126,7 @@
                 }
             }
 
-            if(valid) Console.WriteLine("A megadott email cím érvényes");
+            if (valid) Console.WriteLine("A megadott email cím érvényes");
             else Console.WriteLine("A megadott email cím nem érvényes");
         }
 
@@ -172,7 +177,123 @@
 
             Console.WriteLine($"\nA kapott szöveg: {output}");
         }
+
+        static void Feladat8()
+        {
+            Console.WriteLine("Adja meg a bemeneti karakterláncot (type empty to quit)");
+
+            string input = "";
+
+            while (true)
+            {
+                string tmp = Console.ReadLine().Trim();
+                if (tmp.Length == 0) break;
+                input += ((input.Length > 0) ? "\n" : "") + tmp;
+            }
+
+            string[][] table = input.Split('\n').Select(e => e.Split(';').ToArray()).ToArray();
+
+            for (int i = 0; i < table.Length; i++)
+            {
+                for (int j = 0; j < table[i].Length; j++)
+                {
+                    if (j == 0) Console.Write("|");
+                    Console.Write($"{table[i][j]}|");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        static void Feladat9()
+        {
+            char[] validOpen = { '(', '[', '{' };
+            char[] validClose = { ')', ']', '}' };
+
+            Console.WriteLine("Adja meg a zárójel sorozatot: ");
+            string input = Console.ReadLine();
+
+            List<char> parentheses = new List<char>();
+            bool valid = true;
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (validOpen.Contains(input[i])) {
+                    parentheses.Add(input[i]);
+                    continue;
+                }
+
+                if (validClose.Contains(input[i])) {
+                    int openIndex = Array.IndexOf(validOpen, parentheses.Last());
+                    int closeIndex = Array.IndexOf(validClose, input[i]);
+                    if (openIndex == closeIndex) {
+                        parentheses.RemoveAt(parentheses.Count - 1);
+                        continue;
+                    }
+
+                    valid = false;
+                    break;
+                }
+            }
+
+            if (parentheses.Count > 0) valid = false;
+
+            if (valid) Console.WriteLine("\nA sorozat szabályos");
+            else Console.WriteLine("\nA sorozat nem szabályos");
+        }
     
-        
+        static void Render(char[,] buffer, (int,int) cursorPos)
+        {
+            for (int y = 0; y < buffer.GetLength(1); y++)
+            {
+                string tmp = "|";
+
+                for (int x = 0; x < buffer.GetLength(0); x++)
+                {
+                    if (x == cursorPos.Item1 && y == cursorPos.Item2)
+                    {
+                        Console.Write(tmp);
+
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.Write(buffer[x, y]);
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.Black;
+
+                        tmp = "";
+                    }
+                    else tmp += buffer[x, y];
+                }
+
+                tmp += "|";
+
+                Console.WriteLine(tmp);
+            }
+
+            Console.WriteLine($"Cursor Pos: {cursorPos.Item1};{cursorPos.Item2}");
+        }
+
+        static void Feladat10()
+        {
+            Console.WindowHeight = (Console.BufferHeight / 200) - 10;
+            ConsoleKey[] movement = { ConsoleKey.LeftArrow, ConsoleKey.UpArrow, ConsoleKey.DownArrow, ConsoleKey.RightArrow };
+
+            char[,] buffer = new char[Console.BufferWidth-10, (Console.BufferHeight / 200)-10];
+            for (int y = 0; y < buffer.GetLength(1); y++) for (int x = 0; x < buffer.GetLength(0); x++) buffer[x, y] = ' ';
+
+            (int, int) cursorPos = (0,0);
+
+            Render(buffer, cursorPos);
+
+            while (true) {
+                ConsoleKeyInfo key = Console.ReadKey();
+                Console.Clear();
+
+                if (movement.Contains(key.Key)) {
+
+                }
+
+                Render(buffer, cursorPos);
+            }
+        }
     }
 }
