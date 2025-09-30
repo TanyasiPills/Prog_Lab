@@ -1,7 +1,4 @@
-﻿using System;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Week4
+﻿namespace Week4
 {
     internal class Program
     {
