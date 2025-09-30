@@ -1,4 +1,5 @@
 ﻿using System;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Week4
 {
@@ -17,7 +18,8 @@ namespace Week4
             //Feladat7();
             //Feladat8();
             //Feladat9();
-            Feladat10();
+            //Feladat10();
+            Feladat11();
         }
 
         static void Feladat1()
@@ -240,8 +242,8 @@ namespace Week4
             if (valid) Console.WriteLine("\nA sorozat szabályos");
             else Console.WriteLine("\nA sorozat nem szabályos");
         }
-    
-        static void Render(char[,] buffer, (int,int) cursorPos)
+
+        static void Render(char[,] buffer, (int, int) cursorPos)
         {
             string tmp = "";
             for (int y = 0; y < buffer.GetLength(1); y++)
@@ -270,12 +272,12 @@ namespace Week4
             Console.WriteLine($"Cursor Pos: {cursorPos.Item1};{cursorPos.Item2}");
         }
 
-        static void Movement(ref (int, int) cursorPos, ConsoleKey key, (int,int) bound)
+        static void Movement(ref (int, int) cursorPos, ConsoleKey key, (int, int) bound)
         {
-            if(key == ConsoleKey.LeftArrow) cursorPos.Item1 = Math.Clamp(--cursorPos.Item1,0,bound.Item1);
-            else if(key == ConsoleKey.RightArrow) cursorPos.Item1 = Math.Clamp(++cursorPos.Item1,0,bound.Item1);
-            else if(key == ConsoleKey.UpArrow) cursorPos.Item2 = Math.Clamp(--cursorPos.Item2,0,bound.Item2);
-            else if(key == ConsoleKey.DownArrow) cursorPos.Item2 = Math.Clamp(++cursorPos.Item2,0,bound.Item2);
+            if (key == ConsoleKey.LeftArrow) cursorPos.Item1 = Math.Clamp(--cursorPos.Item1, 0, bound.Item1);
+            else if (key == ConsoleKey.RightArrow) cursorPos.Item1 = Math.Clamp(++cursorPos.Item1, 0, bound.Item1);
+            else if (key == ConsoleKey.UpArrow) cursorPos.Item2 = Math.Clamp(--cursorPos.Item2, 0, bound.Item2);
+            else if (key == ConsoleKey.DownArrow) cursorPos.Item2 = Math.Clamp(++cursorPos.Item2, 0, bound.Item2);
             //return cursorPos;
         }
 
@@ -288,7 +290,7 @@ namespace Week4
             char[,] buffer = new char[bound.Item1, bound.Item2];
             for (int y = 0; y < buffer.GetLength(1); y++) for (int x = 0; x < buffer.GetLength(0); x++) buffer[x, y] = ' ';
 
-            (int, int) cursorPos = (0,0);
+            (int, int) cursorPos = (0, 0);
 
             Render(buffer, cursorPos);
 
@@ -301,12 +303,46 @@ namespace Week4
                     Movement(ref cursorPos, key.Key, bound);
                     //Console.WriteLine($"{cursorPos.Item1};{cursorPos.Item2}");
                 }
-                else if (key.Key == ConsoleKey.Enter) cursorPos = (0, cursorPos.Item2+1);
+                else if (key.Key == ConsoleKey.Enter) cursorPos = (0, cursorPos.Item2 + 1);
                 else if (key.Key == ConsoleKey.Backspace) buffer[--cursorPos.Item1, cursorPos.Item2] = ' ';
                 else buffer[cursorPos.Item1++, cursorPos.Item2] = key.KeyChar;
 
                 Render(buffer, cursorPos);
             }
+        }
+
+
+        //11. feladat konkrétan csak másolás volt mert amint megtudtam hogy kell csinálni
+        //nem találtam ki jobbat és csak átmásoltam, a megjegyzéseket is benne hagytam hogy feltűnő legyen :/
+        static void Feladat11()
+        {
+            const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+            Console.WriteLine("Add meg a base64 szerű kódolásba áttévendő szöveget");
+            string input = Console.ReadLine();
+
+            var result = new System.Text.StringBuilder();
+            int padding = (3 - (input.Length % 3)) % 3;
+
+            // process 3 bytes at a time
+            for (int i = 0; i < input.Length; i += 3)
+            {
+                int chunk = (input[i] << 16) |
+                            ((i + 1 < input.Length ? input[i + 1] : 0) << 8) |
+                            ((i + 2 < input.Length ? input[i + 2] : 0));
+
+                for (int j = 18; j >= 0; j -= 6)
+                {
+                    int index = (chunk >> j) & 0x3F; // 6 bits
+                    result.Append(Alphabet[index]);
+                }
+            }
+            // handle padding
+            if (padding > 0)
+                result.Length -= padding; // cut off extra chars
+            result.Append(new string('=', padding)); // add '=' like Base64
+
+            Console.WriteLine(result.ToString());
         }
     }
 }
