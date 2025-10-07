@@ -16,7 +16,7 @@
             //Feladat8();
             //Feladat9();
             //Feladat10();
-            Feladat11();
+            //Feladat11();
         }
 
         static void Feladat1()
