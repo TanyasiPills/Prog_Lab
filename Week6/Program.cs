@@ -109,6 +109,33 @@ namespace Week6
         }
     }
 
+    class Human
+    {
+        int id;
+        string date;
+        float gender;
+        float age;
+        float bmi;
+        float bs;
+
+        public Human(int id, string date, float gender, float age, float bmi, float bs)
+        {
+            this.id = id;
+            this.date = date;
+            this.gender = gender;
+            this.age = age;
+            this.bmi = bmi;
+            this.bs = bs;
+        }
+
+        public int Id { get => id; set => id = value; }
+        public string Date { get => date; set => date = value; }
+        public float Gender { get => gender; set => gender = value; }
+        public float Age { get => age; set => age = value; }
+        public float Bmi { get => bmi; set => bmi = value; }
+        public float Bs { get => bs; set => bs = value; }
+    }
+
     internal class Program
     {
         static void Main(string[] args)
@@ -168,7 +195,16 @@ namespace Week6
         
         static void Feladat5()
         {
+            string projDir = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
 
+            List<Human> data = new List<Human>();
+
+            using (StreamReader rd = new StreamReader(projDir + "\\NHANES_1999-2018.csv")) data = rd.ReadToEnd().Split('\n').Skip(1).Select(e => e.Split(',')).Select(e => new Human(int.Parse(e[0]), e[1], float.Parse(e[2].Replace('.', ',')), float.Parse(e[3].Replace('.', ',')), float.Parse(e[4].Replace('.', ',')), float.Parse(e[4].Replace('.', ',')))).ToList();
+
+            Console.WriteLine($"A felmérésben az átlagos testtömegindexek:\n-férfi: {data.Where(e => e.Gender == 1.0).Average(e => e.Bmi)}\n-nő: {data.Where(e => e.Gender == 2.0).Average(e => e.Bmi)}");
+            Console.WriteLine($"Az alanyok {(float)data.Where(e => e.Bs > 5.6).ToList().Count / data.Count}%-nak 5.6-nál magasabb a vércukorszintje");
+            Console.WriteLine($"A legnagyobb BMI-vel rendelkező alany vércukorszintje: {data.MaxBy(e => e.Bmi).Bs}");
+            Console.WriteLine($"A túlsúlyos alanyok átlag életkora: {data.Where(e => e.Bmi >= 30).Average(e => e.Age)}");
         }
     }
 }
