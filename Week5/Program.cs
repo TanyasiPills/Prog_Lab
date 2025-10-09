@@ -113,10 +113,10 @@ namespace Week5
                 string[] c = lines[i].Split(',');
                 ids[i] = int.Parse(c[0]);
                 date[i] = c[1];
-                gender[i] = (float)double.Parse(c[2].Replace('.',','));
-                age[i] = (float)double.Parse(c[3].Replace('.', ','));
-                bmi[i] = (float)double.Parse(c[4].Replace('.', ','));
-                bs[i] = (float)double.Parse(c[5].Replace('.', ','));
+                gender[i] = (float)double.Parse(c[2],System.Globalization.CultureInfo.InvariantCulture);
+                age[i] = (float)double.Parse(c[3],System.Globalization.CultureInfo.InvariantCulture);
+                bmi[i] = (float)double.Parse(c[4],System.Globalization.CultureInfo.InvariantCulture);
+                bs[i] = (float)double.Parse(c[5],System.Globalization.CultureInfo.InvariantCulture);
             }
 
             float maleAvgBmi = 0;
