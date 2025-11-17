@@ -257,3 +257,5 @@ namespace Week7
         }
     }
 }
+
+// if they are inside of a () like: (()() ()() ()()) then it means 2^3 so () ( ()() ) means 1 + 2^1 = 3
