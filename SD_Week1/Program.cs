@@ -215,14 +215,22 @@ namespace SD_Week1
 
     class Team
     {
-        Random random;
+        Random random = new Random();
 
-        string[] nameList = { "yo", "ya", "zsa", "na", "ey", "oh" };
+        string[] nameList = {
+            "Liam","Noah","Oliver","Elijah","James","William","Benjamin","Lucas","Henry","Alexander",
+            "Emma","Olivia","Ava","Sophia","Isabella","Mia","Charlotte","Amelia","Harper","Evelyn",
+            "Leo","Jack","Theo","Oscar","Max","Sam","Daniel","Jacob","Logan","Ethan",
+            "Ella","Luna","Chloe","Lily","Grace","Zoe","Nora","Hannah","Aria","Scarlett",
+            "Kai","Milo","Ezra","Finn","Rowan","Asher","Jasper","Julian","Adam","Ryan",
+            "Ivy","Layla","Ellie","Stella","Violet","Aurora","Lucy","Piper","Ruby","Willow"
+        };
 
-        List<Runner> runners;
+        List<Runner> runners = new List<Runner>();
 
         int currentRunner = 0;
         int currentRunnerDistance = 0;
+        int swapDistance;
 
         int allDistance = 0;
         int runningTime = 0;
@@ -235,22 +243,63 @@ namespace SD_Week1
             {
                 case TeamType.SOLO:
                     GenerateRunners(1);
+                    swapDistance = 50000;
                     break;
                 case TeamType.DUO:
                     GenerateRunners(2);
+                    swapDistance = 20500;
                     break;
                 case TeamType.TRIO:
                     GenerateRunners(3);
+                    swapDistance = 42000/3;
                     break;
                 case TeamType.QUANTUPLE:
                     GenerateRunners(5);
+                    swapDistance = 42000 / 5;
                     break;
             }
         }
 
         public void Move()
         {
-            runners[currentRunner].Move();
+            if (gavup) return;
+
+            if(currentRunnerDistance > swapDistance)
+            {
+                currentRunner++;
+                currentRunnerDistance = 0;
+            }
+
+            int distancce = runners[currentRunner].Move();
+            if (distancce == 0)
+            {
+                gavup = true;
+                return;
+            }
+
+            currentRunnerDistance += distancce;
+            allDistance += distancce;
+
+            runningTime++;
+        }
+
+        public void Display()
+        {
+            Console.Write("[");
+            int calcDistance = 42000 / 40;
+            for (int i = 0; i < 40; i++)
+            {
+                if (allDistance > calcDistance * (i + 1)) Console.Write("#");
+                else Console.Write("-");
+            }
+            Console.Write("]");
+            Console.Write($" {MathF.Round((float)allDistance / 1000,1)}\t {runningTime/60:D2}:{runningTime%60:D2}\t {runners[currentRunner].Name} {(gavup ? "- gave up" : "")}\n");
+        }
+
+        public bool End()
+        {
+            if (allDistance >= 42000) return true;
+            return false;
         }
 
         void GenerateRunners(int playerCount)
@@ -322,15 +371,60 @@ namespace SD_Week1
         }
         #endregion
 
+        #region Feladat2
         static void Feladat2()
         {
+            List<Team> teams = new List<Team>();
 
+            teams.Add(new Team(TeamType.QUANTUPLE));
+            teams.Add(new Team(TeamType.QUANTUPLE));
+            teams.Add(new Team(TeamType.QUANTUPLE));
+            teams.Add(new Team(TeamType.QUANTUPLE));
+
+            bool gameWon = false;
+            int winningTeam = -1;
+
+            int vibeColor = 0;
+
+            while (!gameWon)
+            {
+                Console.SetCursorPosition(0, 0);
+
+                vibeColor++;
+                if (vibeColor == 16) vibeColor = 1;
+                Console.ForegroundColor = (ConsoleColor)vibeColor;
+                Console.WriteLine("Race of the Century!!! #\\(^o^)/#");
+                Console.ForegroundColor = ConsoleColor.White;
+                int curTeam = 0;
+                foreach (var team in teams)
+                {
+                    curTeam++;
+                    team.Move();
+                    team.Display();
+                    if (team.End())
+                    {
+                        gameWon = true;
+                        winningTeam = curTeam;
+                    }
+                }
+                Thread.Sleep(200);
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Team {winningTeam} won the game!");
+            Console.ForegroundColor = ConsoleColor.White;
         }
+        #endregion
 
 
         static void Main(string[] args)
         {
-            //Feladat1();
+            Feladat1();
+
+            Console.ReadKey();
+            Console.Clear();
 
             Feladat2();
         }
