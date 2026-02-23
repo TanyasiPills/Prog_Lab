@@ -20,6 +20,11 @@ namespace SD_Week2
         public abstract float Perimeter();
         public abstract float Area();
 
+        public override string ToString()
+        {
+            return $"{color}, {(isHoly ? "luykas" : "nem lyukas")}, {Perimeter()}, {Area()}";
+        }
+
         public override bool Equals(object? obj)
         {
             return base.Equals(obj);
@@ -100,7 +105,7 @@ namespace SD_Week2
 
 
     #region Bank
-    class Owner
+    sealed class Owner
     {
         public string username;
     }
