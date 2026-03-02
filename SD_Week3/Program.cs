@@ -108,7 +108,7 @@ namespace SD_Week3
     {
         float GetCost(int months);
 
-        bool IsBooked();
+        bool IsBooked { get; set; }
 
         bool Book(int months);
     }
@@ -152,9 +152,11 @@ namespace SD_Week3
             this.bookedMonth = 0;
         }
 
+        public bool IsBooked { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         public bool Book(int months)
         {
-            if (!IsBooked())
+            if (!IsBooked)
             {
                 bookedMonth = months;
                 return true;
@@ -168,14 +170,9 @@ namespace SD_Week3
             return TotalValue() / (240 * InhabitantsCount);
         }
 
-        public bool IsBooked()
-        {
-            return bookedMonth != 0;
-        }
-
         public override bool MoveIn(int newInhabitants)
         {
-            if (IsBooked() && (inhabitantsCount + 1) / area >= 2 && roomCount > Math.Ceiling((float)(inhabitantsCount + 1) / 8))
+            if (IsBooked && (inhabitantsCount + 1) / area >= 2 && roomCount > Math.Ceiling((float)(inhabitantsCount + 1) / 8))
             {
                 inhabitantsCount++;
                 return true;
@@ -232,6 +229,8 @@ namespace SD_Week3
         int months;
         bool isOccupied;
 
+        public bool IsBooked { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         public Garage(float area, float unitPrice, bool isHeated)
         {
             this.area = area;
@@ -243,7 +242,7 @@ namespace SD_Week3
 
         public bool Book(int months)
         {
-            if (IsBooked()) return false;
+            if (IsBooked) return false;
             else
             {
                 this.months = months;
@@ -254,11 +253,6 @@ namespace SD_Week3
         public float GetCost(int months)
         {
             return TotalValue() / 120 * (isHeated ? 1.5f : 1);
-        }
-
-        public bool IsBooked()
-        {
-            return months > 0 || isOccupied;
         }
 
         public float TotalValue()
@@ -333,7 +327,7 @@ namespace SD_Week3
                 {
                     data += ((Flat)item).TotalValue();
                 }
-                else if(item as Garage != null && ((Garage)item).IsBooked())
+                else if(item as Garage != null && ((Garage)item).IsBooked)
                 {
                     data += ((Garage)item).TotalValue();
                 }
@@ -390,14 +384,17 @@ namespace SD_Week3
             Garage garage = new Garage(10, 10, true);
             FamilyApartment family = new FamilyApartment(100, 10, 10);
             Lodgings doge = new Lodgings(20, 10, 10);
-            house.AddRealEstate(garage);
-            house.AddRealEstate(family);
-            house.AddRealEstate(doge);
 
             Console.WriteLine("Garage cost for 10 months:" + garage.GetCost(10));
             family.MoveIn(3);
             Console.WriteLine(family.ToString());
+            Console.WriteLine("Family home total value:" + family.TotalValue());
             doge.Book(100);
+
+            house.AddRealEstate(garage);
+            house.AddRealEstate(family);
+            house.AddRealEstate(doge);
+            Console.WriteLine("Apertment value as a whole:" + house.TotalValue());
         }
     }
 }
