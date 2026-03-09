@@ -3,14 +3,14 @@
 namespace SD_Week1
 {
     #region Feladat1
-    enum Species
+    public enum Species
     {
         Dog,
         Panda,
         Rabbit
     }
 
-    class Animal
+    public class Animal
     {
         string name;
         bool gender;
@@ -36,7 +36,7 @@ namespace SD_Week1
         }
     }
 
-    class Cage
+    public class Cage
     {
         Animal[] animals;
         int animalCount = 0;

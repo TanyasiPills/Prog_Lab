@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SD_Week1\SD_Week1.csproj" />
     <ProjectReference Include="..\SD_Week4\SD_Week4.csproj" />
   </ItemGroup>
 

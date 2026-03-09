@@ -1,15 +1,11 @@
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using SD_Week4;
+using SD_Week1;
 
 namespace Tester
 {
-    public class Tests
+    public class PrimeTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [TestCase(7, true)]
         [TestCase(4, false)]
         public void IsPrimeTest(int number, bool result)
@@ -17,7 +13,10 @@ namespace Tester
             PrimeTool tmp = new PrimeTool(number);
             Assert.IsTrue(tmp.IsPrime() == result);
         }
+    }
 
+    public class ArrayTests
+    {
         [TestCase(new int[] { 1, 2, 3, 6 }, true)]
         [TestCase(new int[] { 7, 2, 4, 3 }, false)]
         public void Contains(int[] numbers, bool result)
@@ -66,7 +65,10 @@ namespace Tester
             ArrayStatistics tmp = new ArrayStatistics(numbers);
             Assert.IsTrue(tmp.MaxIndex() == result);
         }
+    }
 
+    public class StackTests
+    {
         [TestCase(0, false)]
         [TestCase(1, true)]
         public void CanPush(int size, bool result)
@@ -105,7 +107,7 @@ namespace Tester
             {
                 tmp.Push('t');
             }
-            
+
             Assert.IsTrue(tmp.Empty() == result);
         }
 
@@ -120,6 +122,19 @@ namespace Tester
             }
 
             Assert.IsTrue(tmp.Full() == result);
+        }
+    }
+
+    public class AnimalTests
+    {
+
+        [TestCase(1, true)]
+        [TestCase(0, false)]
+        public void CanFitInCage(int size, bool result)
+        {
+            Cage tmp = new Cage(size);
+
+            Assert.IsTrue(tmp.Add(new Animal("József", true, 10, Species.Panda)) == result);
         }
     }
 }
