@@ -1,6 +1,6 @@
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using SD_Week4;
 using SD_Week1;
+using SD_Week4;
+using SD_ZH_Example1;
 
 namespace Tester
 {
@@ -73,7 +73,7 @@ namespace Tester
         [TestCase(1, true)]
         public void CanPush(int size, bool result)
         {
-            Stack tmp = new SD_Week4.Stack(size);
+            Stack tmp = new Stack(size);
             Assert.IsTrue(tmp.Push('t') == result);
         }
 
@@ -81,7 +81,7 @@ namespace Tester
         [TestCase(2, true)]
         public void CanPop(int popCount, bool result)
         {
-            Stack tmp = new SD_Week4.Stack(2);
+            Stack tmp = new Stack(2);
             for (int i = 0; i < 2; i++)
             {
                 tmp.Push('t');
@@ -102,7 +102,7 @@ namespace Tester
         [TestCase(0, true)]
         public void IsEmpty(int pushCount, bool result)
         {
-            Stack tmp = new SD_Week4.Stack(3);
+            Stack tmp = new Stack(3);
             for (int i = 0; i < pushCount; i++)
             {
                 tmp.Push('t');
@@ -115,7 +115,7 @@ namespace Tester
         [TestCase(0, false)]
         public void IsFull(int pushCount, bool result)
         {
-            Stack tmp = new SD_Week4.Stack(3);
+            Stack tmp = new Stack(3);
             for (int i = 0; i < pushCount; i++)
             {
                 tmp.Push('t');
@@ -134,7 +134,87 @@ namespace Tester
         {
             Cage tmp = new Cage(size);
 
-            Assert.IsTrue(tmp.Add(new Animal("József", true, 10, Species.Panda)) == result);
+            Assert.IsTrue(tmp.Add(new Animal("Jï¿½zsef", true, 10, Species.Panda)) == result);
         }
+    }
+    
+    public class ZHTests
+    {
+        [TestCase(100, false, 400)]
+        [TestCase(20, true, 200)]
+        [TestCase(20000, true, -1)]
+        public void EnvelopePrice(int weight, bool fromLocker, double result)
+        {
+            Envelope env = new Envelope(weight, "somewhere", "something");
+            
+            if (result == -1)
+            {
+                Assert.Throws<OverweightException>(() => env.CaculatePrice(fromLocker));
+                return;
+            }
+            
+            Assert.AreEqual(result, env.CaculatePrice(fromLocker));
+        }
+        
+        [TestCase(200, 1400)]
+        [TestCase(20, -1)]
+        public void FragilePrice(int weight,  double result)
+        {
+            FragileParcel env = new FragileParcel(weight, "somewhere", Positioning.Vertical);
+            
+            if (result == -1)
+            {
+                Assert.Throws<DeliveryException>(() => env.CaculatePrice(true));
+                return;
+            }
+            
+            Assert.AreEqual(result, env.CaculatePrice(false));
+        }
+        
+        [Test]
+        public void FragileCreation()
+        {
+            Assert.Throws<IncorrectOrientationException>(() => new FragileParcel(10, "somewhere", Positioning.Arbitrary));
+        }
+        
+        [Test]
+        public void CourierPickup()
+        {
+            Courier cur = new Courier(10);
+            
+            cur.PickupItem(new Envelope(100, "somewhere", "something"));
+            
+            Assert.AreEqual(cur.ActualWeight, 100);
+        }
+
+        [Test]
+        public void CourierSort()
+        {
+            Courier cur = new Courier(10);
+
+            IDeliverable[] result =
+            {
+                new FragileParcel(100, "somewhere", Positioning.Vertical),
+                new FragileParcel(120, "somewhere", Positioning.Vertical),
+                new FragileParcel(140, "somewhere", Positioning.Vertical)
+            };
+            
+            cur.PickupItem(result[0]);
+            cur.PickupItem(result[1]);
+            cur.PickupItem(result[2]);
+            cur.PickupItem(new Envelope(100, "somewhere", "something"));
+            cur.PickupItem(new Envelope(100, "somewhere", "something"));
+
+            IDeliverable[] ja = cur.FragilesSorted();
+            
+            Assert.AreEqual(cur.ActualWeight, 560);
+            for (int i = 0; i < 3; i++)
+            {
+                Assert.AreEqual(result[i], ja[i]);
+            }
+        }
+
+        
+        
     }
 }
