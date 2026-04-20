@@ -56,10 +56,8 @@ public abstract class Parcel : IDeliverable, IComparable
     private Positioning _position;
     public Positioning Position { get => _position; set => _position = value; }
 
-    protected Parcel(int weight, string addressed, Positioning position)
+    protected Parcel(int weight, string addressed, Positioning position) : this(weight, addressed)
     {
-        this.Weight = weight;
-        this.Addressed = addressed;
         this._position = position;
     }
 

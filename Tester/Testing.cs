@@ -1,5 +1,6 @@
 using SD_Week1;
 using SD_Week4;
+using SD_Week9;
 using SD_ZH_Example1;
 
 namespace Tester
@@ -213,8 +214,24 @@ namespace Tester
                 Assert.AreEqual(result[i], ja[i]);
             }
         }
-
+    }
+    
+    class FunkyFunctionTests
+    {
+        [Test]
+        public void MinimumNotSmaller()
+        {
+            IComparable[] array = { 1, 2, 3, 3, 4, 5, 6, 6 };
+            OrderedItemHandler handler = new OrderedItemHandler(array);
+            Assert.That(handler.MinimumNotSmaller(3) == 2);
+        }
         
-        
+        [Test]
+        public void MinimumBigger()
+        {
+            IComparable[] array = { 1, 2, 3, 3, 4, 5, 6, 6 };
+            OrderedItemHandler handler = new OrderedItemHandler(array);
+            Assert.That(handler.MinimumBigger(3) == 4);
+        }
     }
 }
