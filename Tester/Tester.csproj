@@ -22,6 +22,7 @@
     <ProjectReference Include="..\SD_Week4\SD_Week4.csproj" />
     <ProjectReference Include="..\SD_Week9\SD_Week9.csproj" />
     <ProjectReference Include="..\SD_ZH_Example1\SD_ZH_Example1.csproj" />
+    <ProjectReference Include="..\SD_ZH_Example2\SD_ZH_Example2.csproj" />
   </ItemGroup>
 
   <ItemGroup>

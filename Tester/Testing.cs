@@ -2,6 +2,7 @@ using SD_Week1;
 using SD_Week4;
 using SD_Week9;
 using SD_ZH_Example1;
+using SD_ZH_Example2;
 
 namespace Tester
 {
@@ -232,6 +233,41 @@ namespace Tester
             IComparable[] array = { 1, 2, 3, 3, 4, 5, 6, 6 };
             OrderedItemHandler handler = new OrderedItemHandler(array);
             Assert.That(handler.MinimumBigger(3) == 4);
+        }
+    }
+
+    class ZH2Tests
+    {
+        [TestCase("01:01")]
+        [TestCase("01:01:01")]
+        public void ValidParse(string input)
+        {
+            Assert.DoesNotThrow(() => Time.Parse(input));
+        }
+        
+        [TestCase("01:01:01:01")]
+        [TestCase("12:01:01")]
+        public void InValidParse(string input)
+        {
+            Assert.Throws<TimeException>(() => Time.Parse(input));
+        }
+        
+        [TestCase("01:01:00", "01:01:01", -1)]
+        [TestCase("01:01:00", "01:01", 1)]
+        [TestCase("01:01:00", "01:01:00", 0)]
+        public void TimeCompare(string t1, string t2, int result)
+        {
+            Time first  = Time.Parse(t1);
+            Time second = Time.Parse(t2);
+            Assert.That(first.CompareTo(second) == result);
+        }
+
+        [Test]
+        public void BetweenTesting()
+        {
+            string[] input = { "józsef, 01:01:01", "józsef, 01:01:02", "józsef, 01:01:03", };
+            RaceResults raceResults = new RaceResults(3, input);
+            Assert.That(raceResults.Between(Time.Parse("10:10"), Time.Parse("10:11")).Length == 3);
         }
     }
 }
